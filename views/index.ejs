@@ -1,109 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="<%= csrfToken %>" />
-    <title>Nithish Todo Manager</title>
-    <link rel="stylesheet" href="/css/styles.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="/js/script.js" type="text/javascript"></script>   
-    <style>
-      input{
-        background-color: rgb(251, 255, 137);
-        color: brown;
-        border: 3px solid aqua;
-        border-radius: 7px;
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="csrf-token" content="<%= csrfToken %>">
+        <link href="./css/style.css" rel="stylesheet">
+        <title>Nithish's Todo Manager</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="./css/style.css" rel="stylesheet">
+        <script>
+          var token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+         function deleteATodo(id) {
+        fetch(`/todos/${id}`,{
+          method: "delete",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({
+            "_csrf":token
+          })
+        })
+         .then((res) => {
+          if (res.ok) {
+            window.location.reload();
+          }
+         })
+         .catch((err2) => console.log(err2));
       }
-    </style> 
-  </head>
-  <script>
-    //updating and deleting todo
-    let csrfToken = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
-
-    // eslint-disable-next-line no-unused-vars
-    const updateTodo = (id) => {
-      fetch(`/todos/${id}`, {
-        method: "put",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          _csrf: csrfToken,
-        }),
-      })
-        .then((res) => {
-          if (res.ok) {
-            window.location.reload();
+      function updateATodo (id)  {
+          const bool = document.querySelector(`#todos-checkbox-${id}`).checked
+          console.log(bool);
+          fetch(`/todos/${id}`, {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body : JSON.stringify({
+            _csrf : token,
+            completed : bool
+            })
+          })
+          .then((res) => {
+            if (res.ok) {
+              window.location.reload();
+            }
+          })
+          .catch((err1)=>{
+          console.log(err1);
+          })
+        };
+        </script>
+        <style>
+          body{
+            background-color: hotpink;
           }
-        })
-        .catch((err) => console.error(err));
-    };
-
-    // eslint-disable-next-line no-unused-vars
-    const deleteTodo = (id) => {
-      fetch(`/todos/${id}`, {
-        method: "delete",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          _csrf: csrfToken,
-        }),
-      })
-        .then((res) => {
-          if (res.ok) {
-            window.location.reload();
-          }
-        })
-        .catch((err) => console.error(err));
-    };
-    
-
-  </script>
-  <body style="background-color: hotpink;">
-    <!-- the contents of header.js post-->
-
-    <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
-        <header ><%- include('header.ejs') %></header>
+         
+        </style>
+    </head>
+    <body >
+       <div >
+        <div style="margin: 50px;">
+        <%- include("header.ejs") %> 
         <form action="/todos" method="post">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <div class="flex gap-2 py-4">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+           <!-- when our form gets submiited csrf token also gets submitted -->
+            <div class="flex gap-2 py-4">
+                <div class="flex-auto">
+                    <input style="background-color: black; color: aqua; border: 3px solid white; border-radius: 5px;" type="text" name="title" placeholder="What's next" class="border border-black-300  text-gray-900 w-full p-2 text-sm" required />
+                </div>
             <div class="flex-auto">
-              <input
-                type="text"
-                name="title"
-                placeholder="What's next?"
-                class="border border-gray-300 w-full rounded p-2 text-sm"
-                required
-              />
-            </div>
-            <div class="flex-auto">
-              <input
-                type="date"
-                name="dueDate"
-                required
-                class="border border-gray-300 w-full rounded p-2 text-sm leading-4"
-                value='<%= new Date().toLocaleDateString("en-CA"); %>'
-              />
+                <input style="background-color: rgb(46, 39, 39); color: aqua; border: 3px solid white; border-radius: 5px;" type="date" name="dueDate" class="border border-black-300 rounded text-gray-900 w-full p-2 text-sm leading-4 " required/>
             </div>
             <div class="flex-none">
-              <button
-                type="submit"
-                class="bg-blue-600 text-white px-5 py-2 rounded font-medium mr-2 mb-2 py-1.5"
-              >
-                Add
-              </button>
+                <button  type="submit" class="button" style=" padding: 5px;background-color: aqua;color: black;border: 3px solid white; border-radius: 5px;" >Add</button>
+            </div>  
             </div>
-          </div>
         </form>
-        <br />
-
-        <!--contents of todo.ejs get-->
-        <%- include("todos.ejs", {title: "Overdue",data: overdueItems}) %>         
-        <%- include("todos.ejs", {title: "Due Today",data: dueTodayItems}) %>          
-        <%- include("todos.ejs", {title: "Due Later",data: dueLaterItems}) %>        
-        <%- include("todos.ejs", {title: "Completed Items",data: completedItems}) %>
-    
-    
-  </body>
+        <%- include('todos.ejs', {title: "Overdue", data: overdue}) %>
+        <%- include('todos.ejs', {title: "Due Today", data: dueToday}) %>
+        <%- include('todos.ejs', {title: "Due Later", data: dueLater}) %>
+        <%- include('todos.ejs', {title: "Completed Items", data: completedItemsIs}) %>
+    </div>
+</div>
+    </body>
 </html>
