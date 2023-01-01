@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300&display=swap" rel="stylesheet">
+    <title><%=title%></title>
+    <style>
+        #bt{
+            border-radius: 50px;
+        }
+    </style>
+</head>
+<body style="font-family: 'Unbounded', cursive ;font-weight:bolder">
+    <img src="bg1.jpeg" alt="" style="height: 100%; width: 100%; position: absolute;top: 0px;z-index: -1;">
+    <div style="margin-top: 25px;" class="grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <%- include('header.ejs') %>
+            <h6 class="py-5">Sign Up as a new user</h6>
+            <div>
+                <% if (messages && messages.error && messages.error.length > 0) { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <p class="bg-red-100 my-3 list-none rounded px-4 py-2"><%= messages.error[i] %></p>
+                    <% } %>
+                <% } %>
+            </div>
+            <form action="/users" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <div class="py-4">
+                    <label for="firstName">First Name: </label>
+                    <input id="firstName" type="text" name="firstName" class="border border-color-300 text-gray-900 rounded p-2 w-full">
+                </div>
+                <div class="py-4">
+                    <label for="lastName">Last Name: </label>
+                    <input id="lastName" type="text" name="lastName" class="border border-color-300 text-gray-900 rounded p-2 w-full">
+                </div>
+                <div class="py-4">
+                    <label for="email">EmailID : </label>
+                    <input id="email" type="email" name="email" class="border border-color-300 text-gray-900 rounded p-2 w-full">
+                </div>
+                <div class="py-4">
+                    <label for="password">Password: </label>
+                    <input id="password" type="password" name="password" class="border border-color-300 text-gray-900 rounded p-2 w-full">
+                </div>
+                <button type="submit" style="  background-color: cyan;
+                color: black;
+                margin-left: 25px;
+                padding: 5px;
+                border: 3px solid black;
+                border-radius: 5px;
+                font-family: system-ui;" id="bt">Sign up</button>
+            </form>
+            
+        </div>
+    </div>
+</body>
+</html>
