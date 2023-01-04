@@ -15,11 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-<<<<<<< HEAD
     static addTodo({ title, dueDate, userID }) {
-=======
-    static async addaTodo({ title, dueDate, userID }) {
->>>>>>> b8178510b30b4a4c11db63d4830f76a39d862ed2
       return this.create({
         title: title,
         dueDate: dueDate,
@@ -28,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-<<<<<<< HEAD
     static getTodos(userID) {
       return this.findAll({
         where: {
@@ -37,8 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-=======
->>>>>>> b8178510b30b4a4c11db63d4830f76a39d862ed2
     static async overDue(userID) {
       return await Todo.findAll({
         where: {
@@ -65,18 +58,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-<<<<<<< HEAD
-=======
-    static async completedItemsAre(userID) {
-      return await Todo.findAll({
-        where: {
-          completed: true,
-          userID,
-        },
-      });
-    }
-
->>>>>>> b8178510b30b4a4c11db63d4830f76a39d862ed2
     static async dueLater(userID) {
       return await Todo.findAll({
         where: {
@@ -90,7 +71,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-<<<<<<< HEAD
     static async completedItems(userID) {
       return await Todo.findAll({
         where: {
@@ -99,9 +79,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-=======
-    
->>>>>>> b8178510b30b4a4c11db63d4830f76a39d862ed2
 
     static async remove(id, userID) {
       return this.destroy({
@@ -112,26 +89,10 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-<<<<<<< HEAD
     setCompletionStatus(state) {
       return this.update({ completed: state });
     }
   }
-=======
-    static async getTodos(userID) {
-      return this.findAll({
-        where: {
-          userID,
-        },
-      });
-    }
-
-  setCompletionStatusAs(status) {
-      return this.update({ completed: status });
-    }
-  }
-  
->>>>>>> b8178510b30b4a4c11db63d4830f76a39d862ed2
   Todo.init(
     {
       title: {
