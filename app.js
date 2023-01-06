@@ -90,7 +90,7 @@ app.get("/", async function (request, response) {
     });
   }
 });
-//Retriving Todo's data
+//Retriving Todo's data from the todo manager
 app.get(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
@@ -126,13 +126,50 @@ app.get(
     }
   }
 );
-//Sign-up
+//Sign-up into the todo manager
 app.get("/signup", (request, response) => {
   response.render("signup", {
     title: "Sign up",
     csrfToken: request.csrfToken(),
   });
 });
+
+//Login into the todo manager
+app.get("/login", (request, response) => {
+  response.render("login", {
+    title: "Login",
+    csrfToken: request.csrfToken(),
+  });
+});
+
+
+//Sign-out from the todo manager
+app.get("/signout", (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect("/");
+  });
+});
+
+//To obtain todos from the todos manager
+
+app.get(
+  "/todos/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const todo = await Todo.findByPk(request.params.id);
+      return response.json(todo);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+
 
 app.post("/users", async (request, response) => {
   if (!request.body.firstName) {
@@ -172,13 +209,9 @@ app.post("/users", async (request, response) => {
     return response.redirect("/signup");
   }
 });
-//Login
-app.get("/login", (request, response) => {
-  response.render("login", {
-    title: "Login",
-    csrfToken: request.csrfToken(),
-  });
-});
+
+
+
 
 app.post(
   "/session",
@@ -190,41 +223,11 @@ app.post(
     response.redirect("/todos");
   }
 );
-//Sign-out
-app.get("/signout", (request, response, next) => {
-  request.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    response.redirect("/");
-  });
-});
 
-// app.get("/todos", async function (_request, response) {
-//   console.log("Processing list of all Todos ...");
-//   // FILL IN YOUR CODE HERE
-//   try {
-//     const todos = await Todo.findAll();
-//     return response.json(todos);
-//   } catch (error) {
-//     console.log(error);
-//     return response.status(422).json(error);
-//   }
-// });
 
-app.get(
-  "/todos/:id",
-  connectEnsureLogin.ensureLoggedIn(),
-  async function (request, response) {
-    try {
-      const todo = await Todo.findByPk(request.params.id);
-      return response.json(todo);
-    } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
-    }
-  }
-);
+
+//post request to the todos app
+
 
 app.post(
   "/todos",
@@ -252,6 +255,7 @@ app.post(
   }
 );
 
+
 app.put(
   "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
@@ -269,6 +273,8 @@ app.put(
   }
 );
 
+
+//deleting a todo form the todo manager app
 app.delete(
   "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),

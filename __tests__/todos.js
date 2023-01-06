@@ -136,18 +136,6 @@ describe("Todo Application", function () {
     expect(parsedUpdateResponse.completed).toBe(false);
   });
 
-  // test("Fetching all todos in the database", async () => {
-  //   const agent = request.agent(server);
-  //   await login(agent, "nithish@gmail.com", "123456");
-  //   let res = await agent.get("/todos");
-  //   let csrfToken = extractCsrfToken(res);
-  //   await agent.post("/todos").send({
-  //     title: "Buy milk",
-  //     dueDate: new Date().toISOString(),
-  //     completed: false,
-  //     _csrf: csrfToken,
-  //   });
-
   //   res = await agent.get("/todos");
   //   csrfToken = extractCsrfToken(res);
   //   await agent.post("/todos").send({
@@ -192,8 +180,7 @@ describe("Todo Application", function () {
     });
     const parsedDeleteResponse = JSON.parse(deleteResponse.text).success;
     expect(parsedDeleteResponse).toBe(true);
-    //testing for response-false
-    //as above id is deleted it does not exist
+    //testing for response-false as above id is deleted it does not exist
     res = await agent.get("/todos");
     csrfToken = extractCsrfToken(res);
 
